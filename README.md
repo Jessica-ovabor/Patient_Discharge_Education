@@ -25,7 +25,7 @@ The application supports role-aware prompting, tone control, and language-level 
 
 ## 🛠 Tech Stack
 
-* **Python 3.10+**
+* **Python 3.11.8**
 * **OpenAI API**
 * **Streamlit**
 * **uv** (fast dependency management)
@@ -38,7 +38,7 @@ The application supports role-aware prompting, tone control, and language-level 
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/your-username/patient-discharge-education.git
+git clone https://github.com/Jessica-ovabor/patient-discharge-education.git
 cd patient-discharge-education
 ```
 
