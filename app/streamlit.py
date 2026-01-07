@@ -14,10 +14,11 @@ base_url = os.getenv("OPENROUTER_BASE_URL")
 st.set_page_config(page_title="Patient Discharge Education Generator", page_icon="🏥")
 
 st.header("AI-Assisted Patient Discharge Education Generator", divider="rainbow")
-st.selectbox(
+user_role = st.selectbox(
     "Select user role:",
     ["Doctor", "Nurse", "Physician Assistant", "Nurse Practitioner"],
 )
+st.session_state["user_role"] = user_role
 st.write("Provide patient details below to generate discharge instructions.")
 procedure_type = st.text_input(
     "Procedure Type", placeholder="e.g., Appendectomy, Hip Replacement"
@@ -36,7 +37,23 @@ st.session_state["patient_details"] = (
     f"Procedure Type: {procedure_type}\nPatient Age: {patient_age}\nDischarge Context: {discharge_context}\nLanguage Level: {language_level}\nEducation Tone: {education_tone}"
 )
 
-
+system_prompt = f""" You are an expert AI medical assistant specializing in generating patien discharge education materials. Your task is to create clear, concise discharge instructions based on the following patient details, ensuring the content is tailored to the specified language level and tone.
+Do not include information not provided in the patient details.
+Take into account the user role and adjust the instructions accordingly.
+Your response should be structured with headings and bullet points for easy readability. It should include the patient details before the discharge instructions.
+Example format:
+I am provided with the following patient details:
+- Procedure Type: Appendectomy
+- Patient Age: 45
+- Discharge Context: Post-operative
+- Language Level: Simple
+- Education Tone: Empathetic
+Based on these details, here are the discharge instructions
+"""
+user_prompt = f"""
+I am currently acting as a {st.session_state['user_role']}. Please generate discharge instructions based on the following patient details:
+{st.session_state['patient_details']}
+"""
 if st.button("Generate Discharge Instructions"):
     st.info("Generating discharge instructions...")
 
@@ -47,10 +64,10 @@ if st.button("Generate Discharge Instructions"):
     response = client.chat.completions.create(
         model="openai/gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant that generates patient discharge instructions."},
-            {"role": "user", "content": st.session_state.get("patient_details", "")}
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
         ],
-        stream=True
+        stream=True,
     )
     placeholder = st.empty()
     content = ""
@@ -59,5 +76,3 @@ if st.button("Generate Discharge Instructions"):
         chunk_message = chunk.choices[0].delta.content or ""
         content += chunk_message
         placeholder.markdown(content)
-       
-  
