@@ -49,10 +49,13 @@ I am provided with the following patient details:
 - Language Level: Simple
 - Education Tone: Empathetic
 Based on these details, here are the discharge instructions
+Always prioritize patient safety and clarity in your instructions.
+Make sure the content generated are not generic but specific to the patient details provided.
+Add a disclaimer at the end: "These instructions are for informational purposes only and do not replace professional medical advice. Always follow your healthcare provider's recommendations."
 """
 user_prompt = f"""
 I am currently acting as a {st.session_state['user_role']}. Please generate discharge instructions based on the following patient details:
-{st.session_state['patient_details']}
+{st.session_state['patient_details']}.
 """
 if st.button("Generate Discharge Instructions"):
     st.info("Generating discharge instructions...")
